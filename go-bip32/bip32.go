@@ -148,6 +148,19 @@ func (key *Key) PublicKey() *Key {
 	}
 }
 
+func (key *Key) DecompressedPubicKey() []byte {
+	if key.IsPrivate {
+		return nil
+	} else {
+		decompressedPubKey, err := DecompressPubkey(key.Key)
+		if err != nil {
+			return nil
+		}
+		pubKey := FromECDSAPub(decompressedPubKey)
+		return pubKey
+	}
+}
+
 // Get address from public key
 func (key *Key) Address() common.Address {
 	if key.IsPrivate {
@@ -177,7 +190,7 @@ func (key *Key) Serialize() []byte {
 	buffer.Write(key.FingerPrint)
 	buffer.Write(key.ChildNumber)
 	buffer.Write(key.ChainCode)
-	buffer.Write(keyBytes)
+	buffer.Write(key.Key)
 
 	// Append the standard doublesha256 checksum
 	serializedKey := addChecksumToBytes(buffer.Bytes())
@@ -217,3 +230,18 @@ func S256() elliptic.Curve {
 	return secp256k1.S256()
 }
 
+// UnmarshalPubkey converts bytes to a secp256k1 public key.
+func UnmarshalPubkey(pub []byte) (*ecdsa.PublicKey, error) {
+	x, y := elliptic.Unmarshal(S256(), pub)
+	if x == nil {
+		return nil, errors.New("failed to unmarshal public key")
+	}
+	return &ecdsa.PublicKey{Curve: S256(), X: x, Y: y}, nil
+}
+
+func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
+	if pub == nil || pub.X == nil || pub.Y == nil {
+		return nil
+	}
+	return elliptic.Marshal(S256(), pub.X, pub.Y)
+}

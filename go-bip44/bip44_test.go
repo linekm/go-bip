@@ -1,11 +1,22 @@
 package bip44
 
 import (
+	"encoding/hex"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/linekm/go-bip/go-bip32"
 	"github.com/linekm/go-bip/go-bip39"
 )
+
+func TestFunctions(t *testing.T) {
+	str := "0xabcd"
+	src := strings.Split(str, "0x")
+	var dst []byte = make([]byte, len(src[1])/2)
+	hex.Decode(dst, []byte(str))
+	fmt.Println(dst)
+}
 
 func TestNewKeyFromMnemonic(t *testing.T) {
 	mnemonic := "hold scale hybrid tank dilemma bullet ship language attitude rug tennis host"
@@ -20,7 +31,7 @@ func TestNewKeyFromMnemonic(t *testing.T) {
 }
 
 func TestNewKeyFromMasterKey(t *testing.T) {
-	mnemonic := "yellow yellow yellow yellow yellow yellow yellow yellow yellow yellow yellow yellow"
+	mnemonic := "hold scale hybrid tank dilemma bullet ship language attitude rug tennis host"
 
 	seed, err := bip39.NewSeedWithErrorChecking(mnemonic, "")
 	if err != nil {

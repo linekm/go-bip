@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"github.com/linekm/go-bip/basen"
 	"github.com/linekm/go-bip/btcutilecc"
 	"golang.org/x/crypto/ripemd160"
@@ -52,6 +53,7 @@ func checksum(data []byte) []byte {
 
 func addChecksumToBytes(data []byte) []byte {
 	checksum := checksum(data)
+	fmt.Printf("checksum len:%d\n", len(checksum))
 	return append(data, checksum...)
 }
 
