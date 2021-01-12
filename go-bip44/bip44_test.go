@@ -1,9 +1,6 @@
 package bip44
 
 import (
-	"encoding/hex"
-	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/linekm/go-bip/go-bip32"
@@ -11,11 +8,8 @@ import (
 )
 
 func TestFunctions(t *testing.T) {
-	str := "0xabcd"
-	src := strings.Split(str, "0x")
-	var dst []byte = make([]byte, len(src[1])/2)
-	hex.Decode(dst, []byte(str))
-	fmt.Println(dst)
+	H := "0x1234"
+	t.Log(H[2:])
 }
 
 func TestNewKeyFromMnemonic(t *testing.T) {
@@ -28,6 +22,8 @@ func TestNewKeyFromMnemonic(t *testing.T) {
 	t.Logf("%x", pubKey)
 	addr := fKey.PublicKey().Address()
 	t.Logf("%x", addr.Bytes())
+	t.Log(addr.Hex())
+	t.Log(addr.String())
 }
 
 func TestNewKeyFromMasterKey(t *testing.T) {
