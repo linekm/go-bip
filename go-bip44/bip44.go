@@ -112,8 +112,8 @@ const (
 	TypeFactomIdentity        uint32 = 0x80000119
 )
 
-func NewKeyFromMnemonic(mnemonic string, coin, account, chain, address uint32) (*bip32.Key, error) {
-	seed, err := bip39.NewSeedWithErrorChecking(mnemonic, "")
+func NewKeyFromMnemonic(mnemonic string, coin, account, chain, address uint32, passWd string) (*bip32.Key, error) {
+	seed, err := bip39.NewSeedWithErrorChecking(mnemonic, passWd)
 	if err != nil {
 		return nil, err
 	}
